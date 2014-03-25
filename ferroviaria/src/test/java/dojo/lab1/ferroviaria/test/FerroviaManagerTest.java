@@ -6,25 +6,52 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import dojo.lab1.ferroviaria.core.FerroviaManager;
+import dojo.lab1.ferroviaria.core.Linha;
+import dojo.lab1.ferroviaria.core.LinhaDAO;
+import dojo.lab1.ferroviaria.core.LinhaNotFoundException;
+import dojo.lab1.ferroviaria.core.OperacaoCarroInfo;
+import dojo.lab1.ferroviaria.core.OperacaoCarroNotFoundException;
+import dojo.lab1.ferroviaria.core.OperacaoLinhaInfo;
+import dojo.lab1.ferroviaria.core.OperacaoLinhaNotFoundException;
 
 public class FerroviaManagerTest {
 
-	private FerroviaManager manager = new FerroviaManager();
+	private LinhaDAO linhaDAO;
+	private FerroviaManager manager;
+	private static final String NOME_LINHA = "linha1";
 
 	@BeforeClass
 	public void setUp() {
+		linhaDAO = new LinhaDAO();
+		manager = new FerroviaManager(linhaDAO);
+
+		linhaDAO.addLinha(new Linha(NOME_LINHA, 30000f));
 
 	}
 
 	@Test(groups = "ferrovia")
-	public void testOperacao() throws InterruptedException {
+	public void testOperacao() throws InterruptedException, LinhaNotFoundException, OperacaoLinhaNotFoundException,
+			OperacaoCarroNotFoundException {
 
-		manager.iniciaOperacao("linha1", "carro1");
+		// LinhaManager lm = manager.getLinha("linha1");
 
-		Thread.sleep(10002);
+		manager.iniciaOperacao(NOME_LINHA, "carro1", 200);
 
-		assertTrue(manager.getOperacao("linha1").getPosicaoAtual("carro1") >= 3000);
+		OperacaoLinhaInfo operacaoLinha = manager.getOperacao(NOME_LINHA);
+
+		OperacaoCarroInfo operacaoCarro = operacaoLinha.getOperacao("carro1");
+
+		// estacao 1... aguarda X tempos e após verifica se o carro chegou na
+		// próxima estação
+		Thread.sleep(11000);
+
+		assertTrue(operacaoCarro.getPosicaoAtual() >= operacaoLinha.getLinha().getEstacoes().get(0));
 		assertEquals(FerroviaManager.PARADO, manager.getStatus("carro1"));
-	}
+		// estacao 2
+		Thread.sleep(11000);
 
+		assertTrue(operacaoCarro.getPosicaoAtual() >= operacaoLinha.getLinha().getEstacoes().get(1));
+		assertEquals(FerroviaManager.PARADO, manager.getStatus("carro1"));
+
+	}
 }
