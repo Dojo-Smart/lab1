@@ -9,17 +9,24 @@ public class FerroviaManager {
 
 	private Operacao operacao;
 
-	private LinhaDAO linhaDAO = new LinhaDAO();
+	private LinhaDAO linhaDAO;
 
 	private Map<String, Operacao> operacoes = new HashMap<String, Operacao>();
 
-	public void iniciaOperacao(String nomeLinha, String nomeCarro) {
+	public FerroviaManager(LinhaDAO linhaDAO) {
+		this.linhaDAO = linhaDAO;
+	}
 
-		String linha = linhaDAO.getLinha(nomeLinha);
+	public void iniciaOperacao(String nomeLinha, String nomeCarro, float velocidade) throws LinhaNotFoundException {
+
+		Linha linha = linhaDAO.getLinha(nomeLinha);
+
+		if (linha == null)
+			throw new LinhaNotFoundException(nomeLinha);
 
 		operacao = new Operacao(linha, nomeCarro);
-		int velocidadeCarro = 300;
-		operacao.iniciaCorrida(velocidadeCarro);
+		
+		operacao.iniciaCorrida(velocidade, linha);
 		operacoes.put(nomeLinha, operacao);
 	}
 
@@ -29,6 +36,11 @@ public class FerroviaManager {
 
 	public Long getStatus(String nomeCarro) {
 		return 0L;
+	}
+
+	public LinhaManager getLinha(String string) {
+
+		return null;
 	}
 
 }
