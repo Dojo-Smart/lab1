@@ -33,8 +33,6 @@ public class FerroviaManagerTest {
 	public void testOperacao() throws InterruptedException, LinhaNotFoundException, OperacaoLinhaNotFoundException,
 			OperacaoCarroNotFoundException {
 
-		// LinhaManager lm = manager.getLinha("linha1");
-
 		manager.iniciaOperacao(NOME_LINHA, "carro1", 200);
 
 		OperacaoLinhaInfo operacaoLinha = manager.getOperacao(NOME_LINHA);
@@ -46,12 +44,9 @@ public class FerroviaManagerTest {
 		Thread.sleep(11000);
 
 		assertTrue(operacaoCarro.getPosicaoAtual() >= operacaoLinha.getLinha().getEstacoes().get(0));
-		assertEquals(FerroviaManager.PARADO, manager.getStatus("carro1"));
-		// estacao 2
+
 		Thread.sleep(11000);
 
 		assertTrue(operacaoCarro.getPosicaoAtual() >= operacaoLinha.getLinha().getEstacoes().get(1));
-		assertEquals(FerroviaManager.PARADO, manager.getStatus("carro1"));
-
 	}
 }

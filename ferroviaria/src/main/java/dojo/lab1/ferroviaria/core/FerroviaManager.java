@@ -50,9 +50,4 @@ public class FerroviaManager {
 
 		};
 	}
-
-	public Long getStatus(String nomeCarro) {
-		return 0L;
-	}
-
 }
