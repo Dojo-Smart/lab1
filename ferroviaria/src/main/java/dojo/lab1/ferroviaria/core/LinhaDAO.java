@@ -12,7 +12,7 @@ public class LinhaDAO {
 	}
 
 	public void addLinha(Linha linha) {
-		
+
 		linhas.put(linha.getNome(), linha);
 	}
 }
